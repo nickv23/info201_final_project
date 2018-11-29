@@ -1,5 +1,7 @@
 library(shiny)
 
+college_data <- read.csv("MERGED2016_17_PP.csv", stringsAsFactors = FALSE)
+
 shinyServer(function(input, output) {
    
   output$distPlot <- renderPlot({
