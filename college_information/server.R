@@ -2,6 +2,11 @@ library(shiny)
 
 shinyServer(function(input, output) {
    
+  
+  
+  
+  
+  
   output$distPlot <- renderPlot({
     
     x    <- faithful[, 2] 
