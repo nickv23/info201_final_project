@@ -27,12 +27,10 @@ shinyServer(function(input, output) {
                             "South Carolina" = "SC", "South Dakota" = "SD", "Tennessee" = "TN", "Texas" = "TX",
                             "Utah" = "UT", "Vermont" = "VT", "Virginia" = "VA", "Washington" = "WA",
                             "West Virginia" = "WV", "Wisconsin" = "WI", "Wyoming" = "WY"), 
-                selected = "AL")
+                selected = "NS")
   })
   
   output$map_plot <- renderLeaflet({
-    #req(input$map_state_select)
-    
     if (input$map_state_select == "US") {
       state_data <- leaflet_data  
     } else {
@@ -45,8 +43,6 @@ shinyServer(function(input, output) {
       map_markers <- leaflet(state_data) %>% addTiles() %>% 
         addMarkers(lng = as.numeric(state_data$LONGITUDE), lat = as.numeric(state_data$LATITUDE), label = state_data$INSTNM)
     }
-    #map_markers <- leaflet(state_data) %>% addTiles() %>% 
-      #addMarkers(lng = as.numeric(state_data$LONGITUDE), lat = as.numeric(state_data$LATITUDE), label = state_data$INSTNM)
     map_markers
   })
   
