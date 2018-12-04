@@ -1,6 +1,7 @@
 library(shiny)
 library(leaflet)
 library(shinythemes)
+library(plotly)
 
 shinyUI(fluidPage(
   theme = shinytheme("flatly"),
@@ -23,7 +24,11 @@ shinyUI(fluidPage(
       h3("Our Widgets:"),
       p(strong("Location: "), "The locations tab allows you locate all the available colleges within a selected state.
         Hover your mouse over a marker to get the full name of the college."),
-      p(strong("Population: "), "Linley INSERT TEXT HERE"),
+      p(strong("Population: "), "The population tab allows you to look at race data for colleges. Simply choose a state
+        that you're interested in and then choose a college within that state. A pie chart should show up 
+        that gives the percentages of each race. You can hover over the pie chart slices and see the exact percentages
+        if it is hard to read. A table also renders giving the same data on race percentages to allow the user to see
+        the data in a graph and table view."),
       p(strong("Score: "), "Choose a state and then choose a college/university that is in that state from the drop down menu. 
         Then a bar graph will show the midpoint ACT and another bar graph will show the midpoint SAT scores. 
         For the ACT this includes midpoint of cumulative, english, math, and writing scores. For the SAT this is 
@@ -59,27 +64,27 @@ shinyUI(fluidPage(
       sidebarLayout(
         sidebarPanel(
           selectInput("States",
-            "Choose a State",
-            choices = list(
-              "Alabama" = "AL", "Alaska" = "AK", "Arizona" = "AZ", "Arkansas" = "AR",
-              "California" = "CA", "Colorado" = "CO", "Connecticut" = "CT", "Delaware" = "DE",
-              "Florida" = "FL", "Georgia" = "GA", "Hawaii" = "HI", "Idaho" = "ID", "Illinois" = "IL",
-              "Indiana" = "IN", "Iowa" = "IA", "Kansas" = "KS", "Kentucky" = "KY", "Louisiana" = "LA",
-              "Maine" = "ME", "Maryland" = "MD", "Massachusetts" = "MA", "Michigan" = "MI", "Minnesota" = "MN",
-              "Mississippi" = "MS", "Missouri" = "MO", "Montana" = "MT", "Nebraska" = "NE", "Nevada" = "NV",
-              "New Hampshire" = "NH", "New Jersey" = "NJ", "New Mexico" = "NM", "New York" = "NY", "North Carolina" = "NC",
-              "North Dakota" = "ND", "Ohio" = "OH", "Oklahoma" = "OK", "Oregon" = "OR", "Pennsylvania" = "PA",
-              "Rhode Island" = "RI", "South Carolina" = "SC", "South Dakota" = "SD", "Tennessee" = "TN",
-              "Texas" = "TX", "Utah" = "UT", "Vermont" = "VT", "Virginia" = "VA", "Washington" = "WA", "West Virginia" = "WV",
-              "Wisconsin" = "WI", "Wyoming" = "WY"
-            )
-          ),
+                      # Select a particular State
+                      label = h3("Select a State"),
+                      choices = list("Alabama"="AL", "Alaska"="AK", "Arizona"="AZ", "Arkansas"="AR",
+                                     "California"="CA", "Colorado"="CO", "Connecticut"="CT", "Delaware"="DE",
+                                     "Florida"="FL", "Georgia"="GA", "Hawaii"="HI", "Idaho"="ID", "Illinois"="IL",
+                                     "Indiana"="IN", "Iowa"="IA", "Kansas"="KS", "Kentucky"="KY", "Louisiana"="LA",
+                                     "Maine"="ME", "Maryland"="MD", "Massachusetts"="MA", "Michigan"="MI", "Minnesota"="MN",
+                                     "Mississippi"="MS", "Missouri"="MO", "Montana"="MT", "Nebraska"="NE", "Nevada"="NV",
+                                     "New Hampshire"="NH", "New Jersey"="NJ", "New Mexico"="NM", "New York"="NY", "North Carolina"= "NC",
+                                     "North Dakota"="ND", "Ohio"="OH", "Oklahoma"="OK", "Oregon"="OR", "Pennsylvania"="PA",
+                                     "Rhode Island"="RI", "South Carolina"="SC", "South Dakota"="SD", "Tennessee"="TN",
+                                     "Texas"="TX", "Utah"="UT", "Vermont"="VT", "Virginia"="VA", "Washington"="WA", "West Virginia"="WV",
+                                     "Wisconsin"="WI","Wyoming"="WY"),
+                      selected = "AL"),
           uiOutput("ChosenState"),
           tableOutput("RaceInfo")
         ),
 
         mainPanel(
-          plotOutput("distPlot")
+          # Plots pie chart of race percentages
+          plotlyOutput("plot", height = "100%")
         )
       )
     ),

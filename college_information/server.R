@@ -3,6 +3,7 @@ library(ggplot2)
 library(scales)
 library(dplyr)
 library(leaflet)
+library(plotly)
 
 college_data <- read.csv("MERGED2016_17_PP.csv", stringsAsFactors = FALSE)
 collegeInfo <- read.csv("state_info.csv", stringsAsFactors = FALSE)
@@ -69,7 +70,7 @@ shinyServer(function(input, output) {
     paste(input$States)
   })
 
-  output$ChosenState <- renderUI({
+  output$ChosenState <- renderUI({  # Gives choice of College depending on users input
     trim_raceInfo <- collegeInfo %>%
       select(INSTNM, PCT_WHITE, PCT_BLACK, PCT_ASIAN, PCT_HISPANIC, OPEID)
 
@@ -80,7 +81,7 @@ shinyServer(function(input, output) {
     state_data <- joinTables %>%
       select(INSTNM, STABBR) %>%
       filter(STABBR == StateInput())
-    selectInput("Colleges", "Choose a College", choices = c(state_data$INSTNM))
+    selectInput("Colleges", label = h3("Select a School"), choices = c(state_data$INSTNM))
   })
 
   output$RaceInfo <- renderTable({ # Renders a table of the DATA
@@ -98,15 +99,13 @@ shinyServer(function(input, output) {
     trim_raceInfo$PCT_HISPANIC <- paste0(round(as.numeric(trim_raceInfo$PCT_HISPANIC), digits = 1), "%")
 
     rename <- trim_raceInfo %>%
-      mutate(
-        College = INSTNM, White = PCT_WHITE, Black = PCT_BLACK,
-        Asian = PCT_ASIAN, Hispanic = PCT_HISPANIC
-      ) %>%
+      mutate(College = INSTNM, White = PCT_WHITE, Black = PCT_BLACK,
+            Asian = PCT_ASIAN, Hispanic = PCT_HISPANIC) %>%
       select(College, White, Black, Asian, Hispanic) %>%
       filter(College == input$Colleges)
   })
 
-  output$distPlot <- renderPlot({ # Renders a Pie Chart
+  output$plot <- renderPlotly({    # Renders a Pie Chart
     trim_raceInfo <- collegeInfo %>%
       select(INSTNM, PCT_WHITE, PCT_BLACK, PCT_ASIAN, PCT_HISPANIC, OPEID)
 
@@ -125,21 +124,16 @@ shinyServer(function(input, output) {
         digits = 1
       )
     )
-    p <- ggplot(data_frame, aes(x = "", y = value, fill = Races)) +
-      geom_bar(width = 1, stat = "identity", color = "black") +
-      coord_polar(theta = "y", start = 0) +
-      theme_void() +
-      ggtitle(paste0("Race Percentages at ", input$Colleges)) +
-      scale_fill_brewer(palette = "Pastel2") +
-      theme(plot.title = element_text(size = 20)) +
-      theme(text = element_text(size = 15)) + # changes size of legend text
-      geom_text(size = 6, aes(label = paste0(value, "%")), position = position_stack(vjust = 0.5), angle = 45)
-    p + guides(
-      fill =
-        guide_legend(
-          title.theme = element_text(size = 20, face = "plain", colour = "black", angle = 0) # changes the size of legend title
-        )
-    )
+    
+    colors <- c('rgb((240,128,128))', '	rgb(216,191,216)', 'rgb(255,235,205)', 'rgb(240,248,255)', 'rgb(114,147,203)')
+    plot_ly(data_frame, labels=~Races, values=~value, type='pie',
+            textposition = 'inside',
+            textinfo = 'label+percent',
+            insidetextfont = list(color = '#000000'),
+            marker = list(colors=colors, line = list(color='#FFFFFF'), width=5)) %>%
+      layout(title = paste0("Race Percentages at ", input$Colleges), 
+             xaxis = list(showgrid=FALSE, zeroline=FALSE, showticklabels=FALSE),
+             yaxis = list(showgrid=FALSE, zeroline=FALSE, showticklabels=FALSE))
   })
   # ======================================================
 
