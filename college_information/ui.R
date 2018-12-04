@@ -16,7 +16,8 @@ shinyUI(fluidPage(
     
     tabPanel(
       "Locations", # feel free to change the title!
-      "You can change the text here to whatever you need",
+      "Here, you can see the select your state of interest and see all colleges within it. Hover over the marker to
+        see the name of the college.",
       
       # This is just an example, delete this and put your code here with your code.
       sidebarLayout(

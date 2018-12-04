@@ -31,10 +31,22 @@ shinyServer(function(input, output) {
   })
   
   output$map_plot <- renderLeaflet({
-    req(input$map_state_select)
-    state_data <- leaflet_data %>% filter(STABBR == input$map_state_select)
-    map_markers <- leaflet(state_data) %>% addTiles() %>% 
-      addMarkers(lng = as.numeric(state_data$LONGITUDE), lat = as.numeric(state_data$LATITUDE), label = state_data$INSTNM)
+    #req(input$map_state_select)
+    
+    if (input$map_state_select == "US") {
+      state_data <- leaflet_data  
+    } else {
+      state_data <- leaflet_data %>% filter(STABBR == input$map_state_select)  
+    }
+    #state_data <- leaflet_data %>% filter(STABBR == input$map_state_select)
+    if(nrow(state_data) == 0) {
+      map_markers <- leaflet(state_data) %>% addTiles()  
+    } else {
+      map_markers <- leaflet(state_data) %>% addTiles() %>% 
+        addMarkers(lng = as.numeric(state_data$LONGITUDE), lat = as.numeric(state_data$LATITUDE), label = state_data$INSTNM)
+    }
+    #map_markers <- leaflet(state_data) %>% addTiles() %>% 
+      #addMarkers(lng = as.numeric(state_data$LONGITUDE), lat = as.numeric(state_data$LATITUDE), label = state_data$INSTNM)
     map_markers
   })
   
