@@ -50,31 +50,38 @@ shinyUI(fluidPage(
           leafletOutput("map_plot")
         )
       )
-
-
       # This is just an example, delete this and put your code here with your code.
 
     ),
     # =========== Paste your code after the text ===========
     
     tabPanel(
-      "Population", # feel free to change the title!
-
-      "You can change the text here to whatever you need",
+      "Population", # Title
       
-      # This is just an example, delete this and put your code here with your code.
       sidebarLayout(
         sidebarPanel(
+          selectInput("States",
+                      "Choose a State",
+                      choices = list("Alabama"="AL", "Alaska"="AK", "Arizona"="AZ", "Arkansas"="AR",
+                                     "California"="CA", "Colorado"="CO", "Connecticut"="CT", "Delaware"="DE",
+                                     "Florida"="FL", "Georgia"="GA", "Hawaii"="HI", "Idaho"="ID", "Illinois"="IL",
+                                     "Indiana"="IN", "Iowa"="IA", "Kansas"="KS", "Kentucky"="KY", "Louisiana"="LA",
+                                     "Maine"="ME", "Maryland"="MD", "Massachusetts"="MA", "Michigan"="MI", "Minnesota"="MN",
+                                     "Mississippi"="MS", "Missouri"="MO", "Montana"="MT", "Nebraska"="NE", "Nevada"="NV",
+                                     "New Hampshire"="NH", "New Jersey"="NJ", "New Mexico"="NM", "New York"="NY", "North Carolina"= "NC",
+                                     "North Dakota"="ND", "Ohio"="OH", "Oklahoma"="OK", "Oregon"="OR", "Pennsylvania"="PA",
+                                     "Rhode Island"="RI", "South Carolina"="SC", "South Dakota"="SD", "Tennessee"="TN",
+                                     "Texas"="TX", "Utah"="UT", "Vermont"="VT", "Virginia"="VA", "Washington"="WA", "West Virginia"="WV",
+                                     "Wisconsin"="WI","Wyoming"="WY")),
+          uiOutput("ChosenState"),
+          tableOutput("RaceInfo")
           
         ),
         
         mainPanel(
+          plotOutput("distPlot")
         )
-      ),
-
-      "You can change the text here to whatever you need"
-
-
+      )
     ),
     # =========== Paste your code after the text ===========
     
@@ -100,6 +107,7 @@ shinyUI(fluidPage(
           # Select a particular school in the chosen state
           uiOutput("schoolName")
         ),
+        
         
         mainPanel(
           # plotting ACT bar graph

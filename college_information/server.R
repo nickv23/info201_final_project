@@ -5,6 +5,8 @@ library(dplyr)
 library(leaflet)
 
 college_data <- read.csv("MERGED2016_17_PP.csv", stringsAsFactors = FALSE)
+collegeInfo <- read.csv("state_info.csv", stringsAsFactors = FALSE)
+
 
 shinyServer(function(input, output) {
   
@@ -52,6 +54,78 @@ shinyServer(function(input, output) {
   
   # =========== Paste your code after the text ===========
   # Linley!!!
+  StateInput <- reactive({      # captures the state the user chose
+    paste(input$States)
+  })
+  
+  output$ChosenState <- renderUI ({
+    trim_raceInfo <- collegeInfo %>%
+      select(INSTNM, PCT_WHITE, PCT_BLACK, PCT_ASIAN, PCT_HISPANIC, OPEID)
+    
+    trim_stateInfo <- college_data %>%
+      select(OPEID, STABBR)
+    
+    joinTables <- left_join(trim_raceInfo, trim_stateInfo, by="OPEID")
+    state_data <- joinTables %>%
+      select(INSTNM, STABBR) %>%
+      filter(STABBR == StateInput())
+    selectInput("Colleges", "Choose a College", choices = c(state_data$INSTNM))
+  })
+  
+  output$RaceInfo <- renderTable({    # Renders a table of the DATA
+    trim_raceInfo <- collegeInfo %>%
+      select(INSTNM, PCT_WHITE, PCT_BLACK, PCT_ASIAN, PCT_HISPANIC)  %>%
+      rowwise() %>%
+      mutate(PCT_WHITE = if((PCT_WHITE == 'NULL')) "0" else PCT_WHITE) %>%
+      mutate(PCT_BLACK = if((PCT_BLACK == 'NULL')) "0" else PCT_BLACK) %>%
+      mutate(PCT_ASIAN = if((PCT_ASIAN == 'NULL')) "0" else PCT_ASIAN) %>%
+      mutate(PCT_HISPANIC = if((PCT_HISPANIC == 'NULL')) "0" else PCT_HISPANIC)
+    
+    trim_raceInfo$PCT_WHITE = paste0(round(as.numeric(trim_raceInfo$PCT_WHITE), digits = 1), '%')
+    trim_raceInfo$PCT_BLACK = paste0(round(as.numeric(trim_raceInfo$PCT_BLACK), digits = 1), '%')
+    trim_raceInfo$PCT_ASIAN = paste0(round(as.numeric(trim_raceInfo$PCT_ASIAN), digits = 1), '%')
+    trim_raceInfo$PCT_HISPANIC = paste0(round(as.numeric(trim_raceInfo$PCT_HISPANIC), digits = 1), '%')
+    
+    rename <- trim_raceInfo %>%
+      mutate(College = INSTNM, White = PCT_WHITE, Black = PCT_BLACK, 
+             Asian = PCT_ASIAN, Hispanic = PCT_HISPANIC) %>%
+      select(College,White,Black,Asian,Hispanic) %>%
+      filter(College == input$Colleges)
+  })
+  
+  output$distPlot <- renderPlot ({     # Renders a Pie Chart 
+    trim_raceInfo <- collegeInfo %>%
+      select(INSTNM, PCT_WHITE, PCT_BLACK, PCT_ASIAN, PCT_HISPANIC, OPEID)
+    
+    trim_stateInfo <- college_data %>%
+      select(OPEID, STABBR)
+    
+    joinTables <- left_join(trim_raceInfo, trim_stateInfo, by="OPEID")
+    
+    college_data <- joinTables %>%
+      select(INSTNM, PCT_WHITE, PCT_BLACK, PCT_ASIAN, PCT_HISPANIC) %>%
+      filter(INSTNM == input$Colleges)
+    
+    data_frame <- data.frame(
+      Races = c("White", "Black", "Asian", "Hispanic"),
+      value = round(as.numeric(c(college_data$PCT_WHITE, college_data$PCT_BLACK, college_data$PCT_ASIAN, college_data$PCT_HISPANIC)),
+                    digits = 1)
+    )
+    p <- ggplot(data_frame, aes(x="", y=value, fill=Races)) +
+      geom_bar(width=1, stat="identity", color="black") +
+      coord_polar(theta ="y", start = 0) +
+      theme_void() +
+      ggtitle(paste0("Race Percentages at ", input$Colleges)) +
+      scale_fill_brewer(palette = "Pastel2") +
+      theme(plot.title = element_text(size=20)) +
+      theme(text= element_text(size=15)) +   # changes size of legend text
+      geom_text(size=6,aes(label = paste0(value,'%')), position=position_stack(vjust=0.5), angle=45)
+    p + guides(fill =
+                 guide_legend (
+                   title.theme = element_text(size = 20,face="plain", colour ="black", angle=0)  # changes the size of legend title
+                 )
+    )
+  })
   # ======================================================
   
   
