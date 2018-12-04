@@ -38,15 +38,31 @@ shinyUI(fluidPage(
 
     tabPanel(
       "Locations", # feel free to change the title!
-      "You can change the text here to whatever you need"
+      "You can change the text here to whatever you need",
 
       # This is just an example, delete this and put your code here with your code.
+      sidebarLayout(
+        sidebarPanel(
+          sliderInput("bins",
+            "Number of bins:",
+            min = 1,
+            max = 50,
+            value = 30
+          )
+        ),
+
+        mainPanel(
+          plotOutput("distPlot")
+        )
+      )
     ),
     # =========== Paste your code after the text ===========
 
     tabPanel(
       "Population", # feel free to change the title!
       "You can change the text here to whatever you need"
+
+      # This is just an example, delete this and put your code here with your code.
 
     ),
     # =========== Paste your code after the text ===========
