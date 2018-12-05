@@ -7,8 +7,6 @@ library(plotly)
 
 
 college_data <- read.csv("college_data.csv", stringsAsFactors = FALSE)
-collegeInfo <- read.csv("state_info.csv", stringsAsFactors = FALSE)
-
 
 shinyServer(function(input, output) {
   output$image <- renderImage({
@@ -66,21 +64,17 @@ shinyServer(function(input, output) {
   })
 
   output$ChosenState <- renderUI({  # Gives choice of College depending on users input
-    trim_raceInfo <- collegeInfo %>%
-      select(INSTNM, PCT_WHITE, PCT_BLACK, PCT_ASIAN, PCT_HISPANIC, OPEID)
-
-    trim_stateInfo <- college_data %>%
-      select(OPEID, STABBR)
-
-    joinTables <- left_join(trim_raceInfo, trim_stateInfo, by = "OPEID")
-    state_data <- joinTables %>%
+    trim_raceInfo <- college_data %>%
+      select(INSTNM, PCT_WHITE, PCT_BLACK, PCT_ASIAN, PCT_HISPANIC, STABBR)
+    
+    state_data <-  trim_raceInfo %>%
       select(INSTNM, STABBR) %>%
       filter(STABBR == StateInput())
     selectInput("Colleges", label = h3("Select a School"), choices = c(state_data$INSTNM))
   })
 
   output$RaceInfo <- renderTable({ # Renders a table of the DATA
-    trim_raceInfo <- collegeInfo %>%
+    trim_raceInfo <- college_data %>%
       select(INSTNM, PCT_WHITE, PCT_BLACK, PCT_ASIAN, PCT_HISPANIC) %>%
       rowwise() %>%
       mutate(PCT_WHITE = if ((PCT_WHITE == "NULL")) "0" else PCT_WHITE) %>%
@@ -101,25 +95,21 @@ shinyServer(function(input, output) {
   })
 
   output$plot <- renderPlotly({    # Renders a Pie Chart
-    trim_raceInfo <- collegeInfo %>%
-      select(INSTNM, PCT_WHITE, PCT_BLACK, PCT_ASIAN, PCT_HISPANIC, OPEID)
+    trim_raceInfo <- college_data %>%
+      select(INSTNM, PCT_WHITE, PCT_BLACK, PCT_ASIAN, PCT_HISPANIC, STABBR)
 
-    trim_stateInfo <- college_data %>%
-      select(OPEID, STABBR)
-
-    joinTables <- left_join(trim_raceInfo, trim_stateInfo, by = "OPEID")
-
-    college_data <- joinTables %>%
+    collegeData <- trim_raceInfo %>%
       select(INSTNM, PCT_WHITE, PCT_BLACK, PCT_ASIAN, PCT_HISPANIC) %>%
       filter(INSTNM == input$Colleges)
 
     data_frame <- data.frame(
       Races = c("White", "Black", "Asian", "Hispanic"),
-      value = round(as.numeric(c(college_data$PCT_WHITE, college_data$PCT_BLACK, college_data$PCT_ASIAN, college_data$PCT_HISPANIC)),
+      value = round(as.numeric(c(collegeData$PCT_WHITE, collegeData$PCT_BLACK, collegeData$PCT_ASIAN, collegeData$PCT_HISPANIC)),
         digits = 1
       )
     )
     
+    # Creates a pie chart using plotly
     colors <- c('rgb((240,128,128))', '	rgb(216,191,216)', 'rgb(255,235,205)', 'rgb(240,248,255)', 'rgb(114,147,203)')
     plot_ly(data_frame, labels=~Races, values=~value, type='pie',
             textposition = 'inside',

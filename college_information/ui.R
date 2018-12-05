@@ -88,6 +88,11 @@ shinyUI(fluidPage(
         ),
         
         mainPanel(
+          p("The pie chart rendered shows the statistics for four races: white, black, hispanic, and asian.
+             Once the user chooses a state and then a college within the state the pie chart should
+             render a new chart that represents data for that specific college"),
+          
+          br(),
           # Plots pie chart of race percentages
           plotlyOutput("plot", height = "100%")
         )
