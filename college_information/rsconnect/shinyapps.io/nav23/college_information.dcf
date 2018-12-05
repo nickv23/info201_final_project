@@ -1,0 +1,12 @@
+name: college_information
+title: college_information
+username:
+account: nav23
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 604472
+bundleId: 1741497
+url: https://nav23.shinyapps.io/college_information/
+when: 1543987659.05696
+asMultiple: FALSE
+asStatic: FALSE

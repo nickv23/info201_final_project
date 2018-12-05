@@ -2,6 +2,7 @@ library(shiny)
 library(leaflet)
 library(shinythemes)
 library(plotly)
+library(kableExtra)
 
 shinyUI(fluidPage(
   theme = shinytheme("flatly"),
@@ -48,7 +49,8 @@ shinyUI(fluidPage(
 
     tabPanel(
       "Locations", 
-      
+      p("In this tab, you can view all the availabe colleges for a selected state. To see the name of a specific college,
+        hover the cursor over its marker."),
       sidebarLayout(
         sidebarPanel(
           

@@ -4,6 +4,7 @@ library(scales)
 library(dplyr)
 library(leaflet)
 library(plotly)
+library(kableExtra)
 
 
 college_data <- read.csv("college_data.csv", stringsAsFactors = FALSE)
