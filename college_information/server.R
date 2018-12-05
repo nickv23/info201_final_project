@@ -4,7 +4,7 @@ library(scales)
 library(dplyr)
 library(leaflet)
 
-college_data <- read.csv("MERGED2016_17_PP.csv", stringsAsFactors = FALSE)
+college_data <- read.csv("college_data.csv", stringsAsFactors = FALSE)
 
 shinyServer(function(input, output) {
   
