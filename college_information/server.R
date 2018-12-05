@@ -5,8 +5,10 @@ library(dplyr)
 library(leaflet)
 library(plotly)
 
-college_data <- read.csv("MERGED2016_17_PP.csv", stringsAsFactors = FALSE)
+
+college_data <- read.csv("college_data.csv", stringsAsFactors = FALSE)
 collegeInfo <- read.csv("state_info.csv", stringsAsFactors = FALSE)
+
 
 shinyServer(function(input, output) {
   output$image <- renderImage({
@@ -49,7 +51,6 @@ shinyServer(function(input, output) {
     } else {
       state_data <- leaflet_data %>% filter(STABBR == input$map_state_select)
     }
-    # state_data <- leaflet_data %>% filter(STABBR == input$map_state_select)
     if (nrow(state_data) == 0) {
       map_markers <- leaflet(state_data) %>% addTiles()
     } else {
