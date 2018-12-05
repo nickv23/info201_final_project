@@ -332,7 +332,8 @@ shinyServer(function(input, output) {
     schools <- input$school
     data <- read_data[read_data$INSTNM %in% schools, ]
     table_data <- data %>%
-      select(INSTNM, CITY, STABBR, TUITIONFEE_IN, TUITIONFEE_OUT, INSTURL) %>%
+      mutate(Website = text_spec(INSTURL)) %>% 
+      select(INSTNM, CITY, STABBR, TUITIONFEE_IN, TUITIONFEE_OUT, Website) %>%
       mutate(
         TUITIONFEE_IN = replace(TUITIONFEE_IN, TUITIONFEE_IN == "NULL", "-"),
         TUITIONFEE_OUT = replace(TUITIONFEE_OUT, TUITIONFEE_OUT == "NULL", "-")
@@ -340,9 +341,8 @@ shinyServer(function(input, output) {
       rename(
         Institution = INSTNM, City = CITY, State = STABBR,
         "Instate Tuition" = TUITIONFEE_IN,
-        "Outstate Tuition" = TUITIONFEE_OUT, Website = INSTURL
+        "Outstate Tuition" = TUITIONFEE_OUT
       ) %>%
-      mutate(Website = text_spec(Website, link = Website)) %>%
       knitr::kable("html", escape = FALSE) %>%
       kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
   }
