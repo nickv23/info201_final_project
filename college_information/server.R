@@ -9,13 +9,6 @@ library(plotly)
 college_data <- read.csv("college_data.csv", stringsAsFactors = FALSE)
 
 shinyServer(function(input, output) {
-  output$image <- renderImage({
-    list(
-      src = "college.jpeg",
-      width = 750,
-      height = 464
-    )
-  }, deleteFile = FALSE)
 
   # =========== Location ===========
   leaflet_data <- college_data %>% select(INSTNM, STABBR, LATITUDE, LONGITUDE)
@@ -334,9 +327,9 @@ shinyServer(function(input, output) {
 
   # Makes a information table from user selected colleges
   output$table <- function() {
-    data <- admiss_filtered_data()
+    read_data <- admiss_filtered_data()
     schools <- input$school
-    data <- filtered_data[filtered_data$INSTNM %in% schools, ]
+    data <- read_data[read_data$INSTNM %in% schools, ]
     table_data <- data %>%
       select(INSTNM, CITY, STABBR, TUITIONFEE_IN, TUITIONFEE_OUT, INSTURL) %>%
       mutate(

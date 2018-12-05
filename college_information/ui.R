@@ -14,7 +14,7 @@ shinyUI(fluidPage(
       h2("About Our Final Project"),
       h4("Members: Lia Johansen, Steffany Ng, Linley Porter,  Nick Verghese"),
       h2("College Statistics", align="center"),
-      plotOutput("image"),
+      div(img(src="college.jpeg", width=900), style="text-align: center"),
       br(),
       br(),
       h3("Our Data:"),
@@ -161,6 +161,10 @@ shinyUI(fluidPage(
           uiOutput("admiss_school")
         ),
         mainPanel(
+          p("The barplot below shows the admission rates of the school you select. 
+            You can select as many schools as you want but it's recommeded to not choose more than 10
+            for a good visualization.
+            You can also get the information from the schools selected."),
           tabsetPanel(
             tabPanel(
               "Rates",
