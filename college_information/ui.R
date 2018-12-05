@@ -13,10 +13,13 @@ shinyUI(fluidPage(
       "About",
       h2("About Our Final Project"),
       h4("Members: Lia Johansen, Steffany Ng, Linley Porter,  Nick Verghese"),
+      h2("College Statistics", align="center"),
       plotOutput("image"),
       br(),
+      br(),
       h3("Our Data:"),
-      p("Our data came from ", a(href = "https://collegescorecard.ed.gov/data/", "College Scorecard Data")),
+      p("Our data came from ", a(href = "https://collegescorecard.ed.gov/data/", "College Scorecard Data"), ". 
+        The data shows information from 2016-2017."),
       h3("Our Audience:"),
       p("Our target audience are high school students and college students who are in the process of 
         finding colleges they want to apply to and attend. They will want to know basic information 
@@ -24,7 +27,7 @@ shinyUI(fluidPage(
       h3("Our Widgets:"),
       p(strong("Location: "), "The locations tab allows you locate all the available colleges within a selected state.
         Hover your mouse over a marker to get the full name of the college."),
-      p(strong("Population: "), "The population tab allows you to look at race data for colleges. Simply choose a state
+      p(strong("Diversity: "), "The diversity tab allows you to look at race data for colleges. Simply choose a state
         that you're interested in and then choose a college within that state. A pie chart should show up 
         that gives the percentages of each race. You can hover over the pie chart slices and see the exact percentages
         if it is hard to read. A table also renders giving the same data on race percentages to allow the user to see
@@ -41,12 +44,11 @@ shinyUI(fluidPage(
     ),
 
 
-    # =========== Paste your code after the text ===========
+    # =========== Locations ===========
 
     tabPanel(
-      "Locations", # feel free to change the title!
+      "Locations", 
       
-      # This is just an example, delete this and put your code here with your code.
       sidebarLayout(
         sidebarPanel(
           
@@ -59,11 +61,11 @@ shinyUI(fluidPage(
         )
       )
     ),
-    # =========== Paste your code after the text ===========
+    # =========== Diversity ===========
 
     tabPanel(
 
-      "Population", # feel free to change the title!
+      "Diversity", 
       sidebarLayout(
         sidebarPanel(
           selectInput("States",
@@ -92,7 +94,7 @@ shinyUI(fluidPage(
       )
  
     ),
-    # =========== Paste your code after the text ===========
+    # =========== Scores ===========
 
     tabPanel(
       "Scores", # Title
@@ -123,9 +125,16 @@ shinyUI(fluidPage(
 
 
         mainPanel(
+          
+          p("The first barplot shows the midpoint ACT scores for cumulative, english, math, and writing. 
+            The second barplot shows the average SAT scores for average, math, reading and writing"),
+          
+          br(),
+          
           # plotting ACT bar graph
           plotOutput("ACTPlot"),
-
+          
+          # Get rid of the error messages (graphs still work)
           tags$style(
             type = "text/css",
             ".shiny-output-error { visibility: hidden; }",
@@ -137,7 +146,7 @@ shinyUI(fluidPage(
         )
       )
     ),
-    # =========== Paste your code after the text ===========
+    # =========== Admission Statistics ===========
 
     tabPanel(
       "Admission Statistics",
@@ -160,6 +169,5 @@ shinyUI(fluidPage(
         )
       )
     )
-    # ======================================================
   )
 ))

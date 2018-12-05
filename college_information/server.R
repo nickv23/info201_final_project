@@ -19,8 +19,7 @@ shinyServer(function(input, output) {
     )
   }, deleteFile = FALSE)
 
-  # =========== Paste your code after the text ===========
-  # Nick!!!!!!
+  # =========== Location ===========
   leaflet_data <- college_data %>% select(INSTNM, STABBR, LATITUDE, LONGITUDE)
 
   output$map_state_select <- renderUI({
@@ -61,12 +60,7 @@ shinyServer(function(input, output) {
     map_markers
   })
 
-  # ======================================================
-
-
-
-  # =========== Paste your code after the text ===========
-  # Linley!!!
+  # =========== Diversity ===========
   StateInput <- reactive({ # captures the state the user chose
     paste(input$States)
   })
@@ -136,11 +130,8 @@ shinyServer(function(input, output) {
              xaxis = list(showgrid=FALSE, zeroline=FALSE, showticklabels=FALSE),
              yaxis = list(showgrid=FALSE, zeroline=FALSE, showticklabels=FALSE))
   })
-  # ======================================================
 
-
-  # =========== Paste your code after the text ===========
-  # Lia!!!
+  # =========== Scores ===========
   output$schoolName <- renderUI({
     state_school_list <- college_data %>%
       filter(STABBR == input$State) %>%
@@ -153,7 +144,6 @@ shinyServer(function(input, output) {
 
 
   output$ACTPlot <- renderPlot({
-    #***************************************************************************************************
     # Get only the ACT scores for a certain state
     # Use this for all of the ACT plots
     state <- input$State
@@ -165,7 +155,7 @@ shinyServer(function(input, output) {
       mutate(ACTENMID = if (ACTENMID == "NULL") "No Scores" else ACTENMID) %>%
       mutate(ACTMTMID = if (ACTMTMID == "NULL") "No Scores" else ACTMTMID) %>%
       mutate(ACTWRMID = if (ACTWRMID == "NULL") "No Scores" else ACTWRMID)
-    #***************************************************************************************************
+    
     # List of the schools in given state
     score_school_list <- scores_ACT$INSTNM
     # Get particular school
@@ -174,7 +164,7 @@ shinyServer(function(input, output) {
     # Getting the particular school
     scores_school_ACT <- scores_ACT %>%
       filter(INSTNM == ACT_school)
-    #***************************************************************************************************
+
     # Making my new data frame which contains the
     # type of act score and the score
     score_ACT_Type <- c("Cumulative", "English", "Math", "Writing")
@@ -186,11 +176,11 @@ shinyServer(function(input, output) {
 
     # Making the color scheme for the bar graph
     score_colors <- c("#CC0000", "#3333CC", "#99CCFF", "#00CCFF")
-    #***************************************************************************************************
+
     # Making my titles for the graph
     score_title <- paste0("ACT scores for ", ACT_school)
     legend_title <- "ACT Score Type"
-    #***************************************************************************************************
+
     # Make plot
     ggplot(score_graph_data, aes(x = TypeACT, y = ACTScore, fill = TypeACT)) +
       geom_bar(stat = "identity") +
@@ -209,7 +199,7 @@ shinyServer(function(input, output) {
   })
 
   output$SATPlot <- renderPlot({
-    #***************************************************************************************************
+
     req(input$State)
     # Filter out only the data from that particular state
     # and the SAT Scores (midpoints)
@@ -221,7 +211,7 @@ shinyServer(function(input, output) {
       mutate(SATMTMID = if (SATMTMID == "NULL") "No Scores" else SATMTMID) %>%
       mutate(SATVRMID = if (SATVRMID == "NULL") "No Scores" else SATVRMID) %>%
       mutate(SATWRMID = if (SATWRMID == "NULL") "No Scores" else SATWRMID)
-    #***************************************************************************************************
+
     # List of the schools in given state
     change_score_school_list <- scores_SAT$INSTNM
     # Get particular school
@@ -230,7 +220,7 @@ shinyServer(function(input, output) {
     # Getting the particular school
     scores_school_SAT <- scores_SAT %>%
       filter(INSTNM == SAT_school)
-    #***************************************************************************************************
+
     # Making my new data frame which contains the
     # type of act score and the score
     score_SAT_Type <- c("Average", "Math", "Reading", "Writing")
@@ -242,11 +232,11 @@ shinyServer(function(input, output) {
 
     # Making the color scheme for the bar graph
     score_colors_SAT <- c("#FF0099", "#669900", "#66FF99", "#00CC99")
-    #***************************************************************************************************
+
     # Making my titles for the graph
     score_title_SAT <- paste0("SAT scores for ", SAT_school)
     legend_title_SAT <- "SAT Score Type"
-    #***************************************************************************************************
+
     # Make plot
     ggplot(score_graph_data_SAT, aes(x = TypeSAT, y = SATScore, fill = TypeSAT)) +
       geom_bar(stat = "identity") +
@@ -262,13 +252,9 @@ shinyServer(function(input, output) {
         x = "Type of SAT Score",
         y = "Midpoint SAT Score"
       )
-    #***************************************************************************************************
   })
-  # ======================================================
 
-
-  # =========== Paste your code after the text ===========
-  # Steffany!!!
+  # =========== Admission statistics ===========
 
   # Reads data and selects necessary columns
   admiss_data <- reactive({
@@ -376,5 +362,4 @@ shinyServer(function(input, output) {
       knitr::kable("html", escape = FALSE) %>%
       kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
   }
-  # ======================================================
 })
