@@ -49,8 +49,7 @@ shinyUI(fluidPage(
 
     tabPanel(
       "Locations", 
-      p("In this tab, you can view all the availabe colleges for a selected state. To see the name of a specific college,
-        hover the cursor over its marker."),
+
       sidebarLayout(
         sidebarPanel(
           
@@ -59,6 +58,8 @@ shinyUI(fluidPage(
         ),
         
         mainPanel(
+          p("In this tab, you can view all the availabe colleges for a selected state. To see the name of a specific college,
+            hover the cursor over its marker."),
           leafletOutput("map_plot")
         )
       )
